@@ -12,7 +12,7 @@ import {
   Legend,
   Filler,
 } from "chart.js"
-import { X } from "lucide-react"
+import { X, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler)
@@ -132,9 +132,9 @@ export default function ObjectDiscoveryDashboard({ result, onClose }: ObjectDisc
   }
 
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 border-2 border-cyan-500/50 rounded-xl shadow-2xl w-full max-w-6xl max-h-[90vh] overflow-y-auto">
-        <div className="sticky top-0 bg-slate-900/95 backdrop-blur border-b border-cyan-500/30 p-6 flex items-center justify-between z-10">
+    <div className="space-y-6">
+      <div className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 border-2 border-cyan-500/50 rounded-xl shadow-2xl overflow-hidden">
+        <div className="bg-slate-900/95 backdrop-blur border-b border-cyan-500/30 p-6 flex items-center justify-between">
           <div>
             <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-purple-300">
               Discovery Dashboard: {result.objectName}
@@ -143,11 +143,11 @@ export default function ObjectDiscoveryDashboard({ result, onClose }: ObjectDisc
           </div>
           <Button
             onClick={onClose}
-            variant="ghost"
-            size="icon"
-            className="text-slate-400 hover:text-white hover:bg-slate-800"
+            variant="outline"
+            className="border-cyan-500/50 text-cyan-400 hover:bg-cyan-950 hover:text-cyan-300"
           >
-            <X className="w-6 h-6" />
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Search
           </Button>
         </div>
 

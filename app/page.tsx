@@ -26,6 +26,7 @@ export default function Home() {
     const result = searchObject(query)
     if (result) {
       setSearchResult(result)
+      setCurrentView("search")
     } else {
       alert("Object not found. Try: Forest, Lake, Building, Road, Cropland, Desert, Snow, or Wetland")
     }
@@ -44,31 +45,28 @@ export default function Home() {
           <div className="flex gap-3 mt-4">
             <button
               onClick={() => setCurrentView("map")}
-              className={`px-6 py-3 rounded-lg font-semibold transition-all ${
-                currentView === "map"
+              className={`px-6 py-3 rounded-lg font-semibold transition-all ${currentView === "map"
                   ? "bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg shadow-cyan-500/50"
                   : "bg-slate-800 text-slate-400 hover:bg-slate-700"
-              }`}
+                }`}
             >
               Interactive Map View
             </button>
             <button
               onClick={() => setCurrentView("hyperspectral")}
-              className={`px-6 py-3 rounded-lg font-semibold transition-all ${
-                currentView === "hyperspectral"
+              className={`px-6 py-3 rounded-lg font-semibold transition-all ${currentView === "hyperspectral"
                   ? "bg-gradient-to-r from-purple-500 to-cyan-500 text-white shadow-lg shadow-purple-500/50"
                   : "bg-slate-800 text-slate-400 hover:bg-slate-700"
-              }`}
+                }`}
             >
               Hyperspectral Analysis
             </button>
             <button
               onClick={() => setCurrentView("search")}
-              className={`px-6 py-3 rounded-lg font-semibold transition-all ${
-                currentView === "search"
+              className={`px-6 py-3 rounded-lg font-semibold transition-all ${currentView === "search"
                   ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/50"
                   : "bg-slate-800 text-slate-400 hover:bg-slate-700"
-              }`}
+                }`}
             >
               Object Search
             </button>
@@ -78,7 +76,11 @@ export default function Home() {
 
       <main className="max-w-7xl mx-auto px-6 py-8 space-y-6">
         {currentView === "search" ? (
-          <ObjectSearch onSearch={handleSearch} />
+          searchResult ? (
+            <ObjectDiscoveryDashboard result={searchResult} onClose={() => setSearchResult(null)} />
+          ) : (
+            <ObjectSearch onSearch={handleSearch} />
+          )
         ) : currentView === "map" ? (
           <>
             <SpectralSlider selectedBand={selectedBand} onBandChange={setSelectedBand} />
@@ -115,8 +117,6 @@ export default function Home() {
           onClose={() => setSelectedZone(null)}
         />
       )}
-
-      {searchResult && <ObjectDiscoveryDashboard result={searchResult} onClose={() => setSearchResult(null)} />}
     </div>
   )
 }
