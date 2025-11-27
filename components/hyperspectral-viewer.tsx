@@ -150,44 +150,48 @@ export default function HyperspectralViewer({ selectedBand }: HyperspectralViewe
         </div>
 
         {/* Hypercube 3D-like visualization */}
-        <div className="relative mb-6" style={{ height: "400px" }}>
-          <div className="absolute inset-0 flex items-center justify-center">
-            {hyperspectralBands.map((band, idx) => {
-              const offset = (idx - selectedCubeLayer) * 3
-              const opacity = Math.max(0, 1 - Math.abs(idx - selectedCubeLayer) * 0.1)
-              const scale = 1 - Math.abs(offset) * 0.005
-              const isSelected = idx === selectedCubeLayer
+        <div className="relative mb-6 flex items-center justify-center" style={{ height: "400px", perspective: "1000px" }}>
+          <div className="relative w-[300px] h-[300px] preserve-3d transition-transform duration-500" style={{ transform: "rotateX(20deg) rotateY(-20deg)" }}>
+            {hyperspectralBands.slice(selectedCubeLayer, selectedCubeLayer + 20).map((band, idx) => {
+              // idx is relative to the slice (0 to 19)
+              const absoluteIdx = selectedCubeLayer + idx
 
               return (
                 <div
-                  key={idx}
-                  className="absolute transition-all duration-300 cursor-pointer"
+                  key={absoluteIdx}
+                  className="absolute inset-0 transition-all duration-300 border border-slate-500/30"
                   style={{
-                    width: `${300 * scale}px`,
-                    height: `${200 * scale}px`,
-                    transform: `translateZ(${offset}px) translateY(${offset * 0.5}px)`,
-                    opacity: opacity,
-                    zIndex: 100 - Math.abs(idx - selectedCubeLayer),
-                    border: isSelected ? "3px solid white" : "1px solid rgba(255,255,255,0.2)",
-                    borderRadius: "8px",
-                    background: `linear-gradient(135deg, ${band.color}40, ${band.color}80)`,
-                    boxShadow: isSelected ? `0 0 30px ${band.color}` : "none",
+                    transform: `translateZ(${-idx * 15}px) translateX(${idx * 5}px) translateY(${-idx * 5}px)`,
+                    zIndex: 100 - idx,
+                    backgroundColor: band.color,
+                    opacity: idx === 0 ? 1 : 0.8,
+                    boxShadow: idx === 0 ? "0 0 20px rgba(0,0,0,0.5)" : "none",
                   }}
-                  onMouseEnter={() => setHoveredLayer(idx)}
-                  onMouseLeave={() => setHoveredLayer(null)}
-                  onClick={() => setSelectedCubeLayer(idx)}
                 >
-                  {(isSelected || hoveredLayer === idx) && (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="bg-black/90 backdrop-blur-sm rounded-lg px-4 py-2 border border-white/30">
-                        <div className="text-white font-bold text-lg">{band.wavelength} nm</div>
-                        <div className="text-slate-300 text-xs">Layer {idx + 1}</div>
+                  {/* Side panels to give thickness illusion */}
+                  <div
+                    className="absolute top-0 right-0 bottom-0 w-[2px] origin-right transform rotate-y-90 bg-white/20"
+                    style={{ transform: "rotateY(90deg) translateX(1px)" }}
+                  />
+                  <div
+                    className="absolute bottom-0 left-0 right-0 h-[2px] origin-bottom transform rotate-x-90 bg-black/20"
+                    style={{ transform: "rotateX(-90deg) translateY(1px)" }}
+                  />
+
+                  {/* Content for the front-most layer */}
+                  {idx === 0 && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/10 hover:bg-transparent transition-colors">
+                      <div className="bg-black/80 backdrop-blur-md rounded px-3 py-1 border border-white/20">
+                        <span className="text-white font-bold">{band.wavelength} nm</span>
                       </div>
                     </div>
                   )}
                 </div>
               )
             })}
+
+            {/* Connection line to spectral graph (conceptual) */}
+            <div className="absolute top-1/2 left-1/2 w-1 h-1 bg-white rounded-full z-[200] shadow-[0_0_10px_white]" />
           </div>
         </div>
 

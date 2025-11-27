@@ -96,17 +96,17 @@ export default function MapViewer({ zones, composition, materials, onZoneClick, 
             const hasElementsInBand = Object.keys(filteredElements).length > 0
 
             let points = ""
-            if (idx === 0) points = "10,10 45,10 45,55 10,55"
-            else if (idx === 1) points = "50,10 90,10 90,40 50,40"
-            else if (idx === 2) points = "10,60 45,60 45,90 10,90"
-            else if (idx === 3) points = "50,45 90,45 90,90 50,90"
+            if (idx === 0) points = "0,0 60,0 55,20 70,35 60,60 30,50 20,80 0,70" // Forest (Top-Left/Center)
+            else if (idx === 1) points = "60,0 100,0 100,60 75,50 70,35 55,20" // Dry Forest (Top-Right)
+            else if (idx === 2) points = "0,70 20,80 30,50 60,60 50,85 40,100 0,100" // Bare Ground (Bottom-Left)
+            else if (idx === 3) points = "60,60 75,50 100,60 100,100 40,100 50,85" // Salt/Disturbed (Bottom-Right)
 
             return (
               <g key={zone.id}>
                 <polygon
                   points={points}
                   fill={zone.color}
-                  opacity={hasElementsInBand ? (isHovered ? 0.7 : 0.5) : 0.2}
+                  opacity={hasElementsInBand ? (isHovered ? 0.6 : 0.4) : 0.1}
                   stroke={isHovered ? "#fff" : zone.color}
                   strokeWidth={isHovered ? 0.8 : 0.3}
                   className="transition-all cursor-pointer"
@@ -129,17 +129,16 @@ export default function MapViewer({ zones, composition, materials, onZoneClick, 
             const hasElementsInBand = Object.keys(filteredElements).length > 0
 
             let positionClass = ""
-            if (idx === 0) positionClass = "top-[15%] left-[15%]"
-            else if (idx === 1) positionClass = "top-[15%] right-[15%]"
-            else if (idx === 2) positionClass = "bottom-[15%] left-[15%]"
+            if (idx === 0) positionClass = "top-[30%] left-[20%]"
+            else if (idx === 1) positionClass = "top-[20%] right-[10%]"
+            else if (idx === 2) positionClass = "bottom-[15%] left-[10%]"
             else if (idx === 3) positionClass = "bottom-[15%] right-[15%]"
 
             return (
               <div key={zone.id} className={`absolute ${positionClass} pointer-events-auto`}>
                 <div
-                  className={`bg-black/80 backdrop-blur-sm rounded-lg p-3 border-2 transition-all cursor-pointer ${
-                    isHovered ? "border-white scale-105 shadow-2xl" : "border-transparent"
-                  } ${!hasElementsInBand ? "opacity-40" : ""}`}
+                  className={`bg-black/80 backdrop-blur-sm rounded-lg p-3 border-2 transition-all cursor-pointer ${isHovered ? "border-white scale-105 shadow-2xl" : "border-transparent"
+                    } ${!hasElementsInBand ? "opacity-40" : ""}`}
                   style={{ borderColor: isHovered ? "#fff" : zone.color }}
                   onMouseEnter={() => setHoveredZone(zone.id)}
                   onMouseLeave={() => setHoveredZone(null)}
