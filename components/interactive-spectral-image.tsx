@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import Image from "next/image"
 
 interface Marker {
   id: string
@@ -9,87 +8,86 @@ interface Marker {
   y: number // percentage
   label: string
   description: string
-  elements: string[]
   color: string
+  materials: string[]
 }
 
 const markers: Marker[] = [
   {
     id: "1",
-    x: 15,
+    x: 8,
     y: 35,
-    label: "Hydrothermal Alteration Zone",
-    description: "High concentration of clay minerals and iron oxides indicating hydrothermal activity",
-    elements: ["Fe₂O₃", "Al₂Si₂O₅(OH)₄", "SiO₂"],
-    color: "from-pink-500 to-purple-500",
+    label: "Hydrothermal Zone",
+    description: "High temperature alteration zone indicating potential geothermal activity",
+    color: "#00ffff",
+    materials: ["Silica", "Sulfur", "Iron Oxide"],
   },
   {
     id: "2",
-    x: 35,
+    x: 25,
     y: 55,
-    label: "Vegetation Index High",
-    description: "Dense vegetation cover with high chlorophyll content detected in NIR band",
-    elements: ["Chlorophyll-a", "H₂O", "Cellulose"],
-    color: "from-green-500 to-emerald-500",
+    label: "Vegetation Cover",
+    description: "Dense vegetation with high chlorophyll content, indicating healthy plant growth",
+    color: "#00ff00",
+    materials: ["Chlorophyll-a", "Chlorophyll-b", "Carotenoids"],
   },
   {
     id: "3",
-    x: 50,
+    x: 38,
     y: 25,
-    label: "Mineral Outcrop",
-    description: "Exposed bedrock with sulfide minerals and quartz veins",
-    elements: ["FeS₂", "CuFeS₂", "SiO₂"],
-    color: "from-yellow-500 to-orange-500",
+    label: "Mineral Deposits",
+    description: "Rich mineral concentration zone with copper and iron oxide signatures",
+    color: "#ffd700",
+    materials: ["Copper", "Iron Oxide", "Manganese"],
   },
   {
     id: "4",
-    x: 72,
+    x: 55,
     y: 40,
     label: "Geological Formation",
-    description: "Layered sedimentary rocks with carbonate and silicate composition",
-    elements: ["CaCO₃", "MgCO₃", "SiO₂"],
-    color: "from-cyan-500 to-blue-500",
+    description: "Ancient rock formation with distinct spectral signatures",
+    color: "#ff6b6b",
+    materials: ["Granite", "Quartz", "Feldspar"],
   },
   {
     id: "5",
-    x: 88,
-    y: 65,
-    label: "Saline Deposit",
-    description: "Evaporite minerals and salt flats detected in SWIR bands",
-    elements: ["NaCl", "CaSO₄", "MgCl₂"],
-    color: "from-pink-400 to-rose-500",
+    x: 72,
+    y: 30,
+    label: "Altered Terrain",
+    description: "Weathered surface showing oxidation and mineral alteration patterns",
+    color: "#a855f7",
+    materials: ["Limonite", "Goethite", "Hematite"],
   },
   {
     id: "6",
-    x: 25,
-    y: 75,
-    label: "Mafic Intrusion",
-    description: "Dark ignite minerals rich in iron and magnesium silicates",
-    elements: ["(Mg,Fe)₂SiO₄", "CaMgSi₂O₆", "FeO"],
-    color: "from-red-500 to-orange-500",
+    x: 88,
+    y: 60,
+    label: "Salt Flat / Evaporite",
+    description: "Evaporite deposits with high reflectance in visible spectrum",
+    color: "#ff69b4",
+    materials: ["Halite", "Gypsum", "Carbonate"],
   },
 ]
 
 export default function InteractiveSpectralImage() {
-  const [activeMarker, setActiveMarker] = useState<Marker | null>(null)
+  const [activeMarker, setActiveMarker] = useState<string | null>(null)
 
   return (
-    <div className="bg-gradient-to-br from-slate-800 to-slate-900 border-2 border-cyan-500/50 rounded-lg p-6 shadow-2xl">
-      <div className="mb-4">
-        <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-purple-300 mb-2">
-          Real Multispectral Satellite Imagery
+    <div className="bg-gradient-to-br from-slate-800 to-slate-900 border-2 border-purple-500/50 rounded-lg p-6 shadow-2xl">
+      <div className="mb-6">
+        <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-pink-300 mb-2">
+          Multispectral Satellite Analysis
         </h2>
-        <p className="text-blue-200 text-sm">
-          Hover over the markers to explore detected materials and spectral signatures in different regions
+        <p className="text-base text-purple-200">
+          Hover over the markers to explore detected materials and geological features in this hyperspectral composite
+          image.
         </p>
       </div>
 
-      <div className="relative rounded-lg overflow-hidden border border-cyan-500/30">
-        <Image
+      <div className="relative rounded-lg overflow-hidden border border-purple-500/30">
+        <img
           src="/images/image.png"
-          alt="Multispectral satellite imagery showing geological and vegetation features"
-          width={1200}
-          height={600}
+          alt="Multispectral satellite imagery showing various geological and vegetation features"
           className="w-full h-auto"
         />
 
@@ -97,61 +95,70 @@ export default function InteractiveSpectralImage() {
         {markers.map((marker) => (
           <div
             key={marker.id}
-            className="absolute"
+            className="absolute cursor-pointer"
             style={{ left: `${marker.x}%`, top: `${marker.y}%` }}
-            onMouseEnter={() => setActiveMarker(marker)}
+            onMouseEnter={() => setActiveMarker(marker.id)}
             onMouseLeave={() => setActiveMarker(null)}
           >
-            {/* Marker Point */}
-            <div className="relative cursor-pointer group">
+            {/* Pulsing marker */}
+            <div
+              className="relative w-4 h-4 rounded-full animate-pulse"
+              style={{ backgroundColor: marker.color, boxShadow: `0 0 12px ${marker.color}` }}
+            >
               <div
-                className={`w-4 h-4 rounded-full bg-gradient-to-r ${marker.color} animate-pulse shadow-lg border-2 border-white/80`}
+                className="absolute inset-0 rounded-full animate-ping opacity-75"
+                style={{ backgroundColor: marker.color }}
               />
-              <div
-                className={`absolute inset-0 w-4 h-4 rounded-full bg-gradient-to-r ${marker.color} opacity-50 animate-ping`}
-              />
+            </div>
 
-              {/* Tooltip */}
-              {activeMarker?.id === marker.id && (
-                <div className="absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-3 w-64 pointer-events-none">
-                  <div className="bg-slate-900/95 backdrop-blur-sm border border-cyan-500/50 rounded-lg p-3 shadow-xl">
-                    <h4
-                      className={`font-bold text-sm mb-1 text-transparent bg-clip-text bg-gradient-to-r ${marker.color}`}
-                    >
-                      {marker.label}
-                    </h4>
-                    <p className="text-xs text-slate-300 mb-2">{marker.description}</p>
-                    <div className="flex flex-wrap gap-1">
-                      {marker.elements.map((el) => (
-                        <span
-                          key={el}
-                          className="px-2 py-0.5 bg-cyan-500/20 text-cyan-300 text-xs rounded-full border border-cyan-500/30"
-                        >
-                          {el}
-                        </span>
-                      ))}
-                    </div>
-                    {/* Arrow */}
-                    <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-slate-900/95" />
+            {/* Tooltip */}
+            {activeMarker === marker.id && (
+              <div
+                className="absolute z-50 w-72 p-4 rounded-lg shadow-2xl border backdrop-blur-md"
+                style={{
+                  backgroundColor: "rgba(15, 23, 42, 0.95)",
+                  borderColor: marker.color,
+                  left: marker.x > 50 ? "auto" : "24px",
+                  right: marker.x > 50 ? "24px" : "auto",
+                  top: marker.y > 50 ? "auto" : "0",
+                  bottom: marker.y > 50 ? "24px" : "auto",
+                }}
+              >
+                <h3 className="font-bold text-lg mb-2" style={{ color: marker.color }}>
+                  {marker.label}
+                </h3>
+                <p className="text-slate-300 text-sm mb-3">{marker.description}</p>
+                <div>
+                  <p className="text-xs text-slate-400 mb-1">Detected Materials:</p>
+                  <div className="flex flex-wrap gap-1">
+                    {marker.materials.map((mat) => (
+                      <span
+                        key={mat}
+                        className="px-2 py-1 rounded text-xs font-medium"
+                        style={{ backgroundColor: `${marker.color}20`, color: marker.color }}
+                      >
+                        {mat}
+                      </span>
+                    ))}
                   </div>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         ))}
       </div>
 
       {/* Legend */}
-      <div className="mt-4 flex flex-wrap gap-3">
+      <div className="mt-4 flex flex-wrap gap-4">
         {markers.map((marker) => (
           <div
             key={marker.id}
-            className="flex items-center gap-2 text-xs text-slate-300 cursor-pointer hover:text-white transition-colors"
-            onMouseEnter={() => setActiveMarker(marker)}
+            className="flex items-center gap-2 text-sm"
+            onMouseEnter={() => setActiveMarker(marker.id)}
             onMouseLeave={() => setActiveMarker(null)}
           >
-            <div className={`w-3 h-3 rounded-full bg-gradient-to-r ${marker.color}`} />
-            <span>{marker.label}</span>
+            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: marker.color }} />
+            <span className="text-slate-300">{marker.label}</span>
           </div>
         ))}
       </div>
