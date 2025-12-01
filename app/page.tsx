@@ -7,6 +7,8 @@ import SpectralSlider from "@/components/spectral-slider"
 import HyperspectralViewer from "@/components/hyperspectral-viewer"
 import ObjectSearch from "@/components/object-search"
 import ObjectDiscoveryDashboard from "@/components/object-discovery-dashboard"
+import InteractiveSpectralImage from "@/components/interactive-spectral-image"
+import SpectralComparisonGuide from "@/components/spectral-comparison-guide"
 import { MATERIAL_LIBRARY, SCENE_ZONES, computeSceneCompositions } from "@/lib/data"
 import { searchObject } from "@/lib/search-data"
 
@@ -77,6 +79,9 @@ export default function Home() {
       </header>
 
       <main className="max-w-7xl mx-auto px-6 py-8 space-y-6">
+        <InteractiveSpectralImage />
+        <SpectralComparisonGuide />
+
         {currentView === "search" ? (
           <ObjectSearch onSearch={handleSearch} />
         ) : currentView === "map" ? (
