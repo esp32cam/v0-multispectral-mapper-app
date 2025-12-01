@@ -25,7 +25,7 @@ interface ObjectTemplate {
   challenges: string[]
 }
 
-export const OBJECT_TEMPLATES: Record<string, ObjectTemplate> = {
+const OBJECT_TEMPLATES: Record<string, ObjectTemplate> = {
   forest: {
     keywords: ["forest", "tree", "jungle", "woods", "vegetation"],
     description:
