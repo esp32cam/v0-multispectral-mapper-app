@@ -8,13 +8,14 @@ import HyperspectralViewer from "@/components/hyperspectral-viewer"
 import ObjectSearch from "@/components/object-search"
 import ObjectDiscoveryDashboard from "@/components/object-discovery-dashboard"
 import InteractiveSpectralImage from "@/components/interactive-spectral-image"
+import Terrain3DViewer from "@/components/terrain-3d-viewer"
 import { MATERIAL_LIBRARY, SCENE_ZONES, computeSceneCompositions } from "@/lib/data"
 import { searchObject } from "@/lib/search-data"
 
 export default function Home() {
   const [selectedZone, setSelectedZone] = useState<string | null>(null)
   const [selectedBand, setSelectedBand] = useState<string>("ALL")
-  const [currentView, setCurrentView] = useState<"map" | "hyperspectral" | "search">("map")
+  const [currentView, setCurrentView] = useState<"map" | "hyperspectral" | "search" | "terrain3d">("map")
   const [searchResult, setSearchResult] = useState<any>(null)
 
   const composition = computeSceneCompositions(SCENE_ZONES, MATERIAL_LIBRARY)
@@ -42,7 +43,7 @@ export default function Home() {
           <p className="text-blue-200 text-lg">
             Interactive satellite map visualization with hyperspectral comparison and object discovery
           </p>
-          <div className="flex gap-3 mt-4">
+          <div className="flex flex-wrap gap-3 mt-4">
             <button
               onClick={() => setCurrentView("map")}
               className={`px-6 py-3 rounded-lg font-semibold transition-all ${
@@ -73,12 +74,38 @@ export default function Home() {
             >
               Object Search
             </button>
+            <button
+              onClick={() => setCurrentView("terrain3d")}
+              className={`px-6 py-3 rounded-lg font-semibold transition-all ${
+                currentView === "terrain3d"
+                  ? "bg-gradient-to-r from-green-500 to-teal-500 text-white shadow-lg shadow-green-500/50"
+                  : "bg-slate-800 text-slate-400 hover:bg-slate-700"
+              }`}
+            >
+              3D Terrain View
+              <span className="ml-2 px-2 py-0.5 text-xs bg-yellow-500 text-black rounded-full font-bold">Demo</span>
+            </button>
           </div>
         </div>
       </header>
 
       <main className="max-w-7xl mx-auto px-6 py-8 space-y-6">
-        {currentView === "search" ? (
+        {currentView === "terrain3d" ? (
+          <div className="space-y-6">
+            <div className="bg-gradient-to-br from-slate-800 to-slate-900 border-2 border-green-500/50 rounded-lg p-6 shadow-2xl backdrop-blur">
+              <div className="mb-6">
+                <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-300 to-teal-300 mb-2">
+                  3D Mountain Terrain Visualization
+                </h2>
+                <p className="text-base text-green-200">
+                  Interactive 3D terrain map with elevation coloring and coordinate axes. Drag to rotate, scroll to
+                  zoom.
+                </p>
+              </div>
+              <Terrain3DViewer />
+            </div>
+          </div>
+        ) : currentView === "search" ? (
           <ObjectSearch onSearch={handleSearch} />
         ) : currentView === "map" ? (
           <>
